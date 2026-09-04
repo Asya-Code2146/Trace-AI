@@ -7,7 +7,7 @@
     <title>TRACE AI - Digital Investigation Engine</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="dark-mode"> <!-- Default Dark Mode -->
+<body class="dark-mode"> 
     <div class="app-layout" id="appLayout">
         <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
@@ -34,12 +34,12 @@
                     <button id="btnClearHistory" class="btn-clear-all" title="Hapus Semua Riwayat">Clear All</button>
                 </div>
 
-                <!-- Search Bar Riwayat -->
+               
                 <div class="history-search-box">
                     <input type="text" id="historySearchInput" placeholder="Cari riwayat..." class="history-search-input">
                 </div>
 
-                <!-- Filter Risiko Sidebar -->
+               
                 <div class="history-filter-box">
                     <select id="historyFilterSelect" class="history-filter-select">
                         <option value="ALL">Semua Risiko</option>
@@ -69,7 +69,7 @@
             </div>
         </aside>
 
-        <!-- Area Konten Utama -->
+     
         <main class="main-content">
             <div class="topbar">
                 <button class="btn-icon" id="btnOpenSidebar" style="display: none;" title="Buka Sidebar">
@@ -77,7 +77,7 @@
                 </button>
                 <div class="model-selector">TRACE AI Engine v1.0</div>
                 
-                <!-- Toggle Theme Button -->
+             
                 <button class="btn-icon theme-toggle" id="btnThemeToggle" title="Ubah Mode Terang/Gelap">
                     <svg id="themeIconSun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
                     <svg id="themeIconMoon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -92,7 +92,7 @@
                     </header>
 
                     <div class="card form-card">
-                        <!-- Quick Template Chips Buttons -->
+                      
                         <div class="template-section">
                             <label class="template-label">Contoh Cepat (Quick Sample):</label>
                             <div class="template-chips">
@@ -124,10 +124,10 @@
 
                         <div class="form-group">
                             <label for="imageInput">Upload Screenshot / Gambar (Bisa Pilih Banyak)</label>
-                            <!-- Ditambahkan atribut multiple -->
+                           
                             <input type="file" id="imageInput" accept="image/*" multiple>
                             
-                            <!-- Container Gallery Preview Gambar Multi -->
+                         
                             <div id="imagePreviewContainer" class="image-preview-gallery" style="display: none;"></div>
                         </div>
 
@@ -139,9 +139,9 @@
                         <span>Menganalisis Evidence dengan TRACE AI... (ML + LLM)</span>
                     </div>
 
-                    <!-- Area Results -->
+                  
                     <div id="results" style="display: none;" class="results-container">
-                        <!-- Action Bar untuk Export -->
+                    
                         <div class="export-actions">
                             <button id="btnCopyReport" class="btn-secondary" title="Salin Ringkasan Hasil (Format WhatsApp)">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
@@ -153,12 +153,12 @@
                             </button>
                         </div>
 
-                        <!-- Performance Metric Badge -->
+                     
                         <div class="performance-badge" id="performanceBadge">
                             ⚡ Diproses dalam <span id="processTime">0.0s</span> | Engine: ML + LLM
                         </div>
 
-                        <!-- Konten Laporan Khusus PDF -->
+                    
                         <div id="pdfContent">
                             <div class="score-box">
                                 <div class="score-item">
@@ -190,10 +190,10 @@
                                 <h3 class="section-title">Rekomendasi Tindakan</h3>
                                 <ul class="rec-list" id="recList"></ul>
                             </div>
-                        </div> <!-- End #pdfContent -->
-                    </div> <!-- End #results -->
-                </div> <!-- End .chat-container -->
-            </div> <!-- End .content-scroll -->
+                        </div> 
+                    </div> 
+                </div> 
+            </div> 
 
             <footer class="app-footer">
                 <div class="footer-inner">
@@ -206,11 +206,11 @@
                 </div>
             </footer>
         </main>
-    </div> <!-- End .app-layout -->
+    </div> 
 
-    <!-- Toast Notification Container -->
+    
     <div id="toastContainer" class="toast-container"></div>
 
-    <script src="/static/app.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
