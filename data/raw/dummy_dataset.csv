@@ -1,0 +1,25 @@
+case_type,text,has_url,has_phone,has_email,asks_for_payment,asks_for_otp,has_urgency,has_threat,has_unrealistic_reward,has_company_name,has_official_domain,suspicious_keyword_count,label
+job_scam,"Dibutuhkan karyawan segera transfer admin 500rb ke rekening ini untuk proses seleksi",0,1,0,1,0,1,0,0,0,0,3,scam
+job_scam,"Lowongan kerja barista di kopi kenangan hubungi hr kopi kenangan com",0,0,1,0,0,0,0,0,1,1,0,legitimate
+job_scam,"Loker gaji 50 juta sebulan tanpa interview hubungi wa ini",0,1,0,0,0,1,0,1,0,0,2,scam
+job_scam,"PT Unilever membuka rekrutmen untuk posisi marketing silakan daftar di career unilever co id",1,0,1,0,0,0,0,0,1,1,0,legitimate
+phishing,"Akun BCA Anda diblokir klik di sini http bca update com untuk verifikasi",1,0,0,0,1,1,1,0,1,0,4,scam
+phishing,"Login ke internet banking BCA melalui aplikasi resmi atau website bca co id",1,0,0,0,0,0,0,0,1,1,0,legitimate
+phishing,"Klik link ini untuk verifikasi email google http google secure login com",1,0,1,0,1,1,0,0,1,0,3,scam
+phishing,"Update password akun google anda melalui menu keamanan di settings google com",1,0,0,0,0,0,0,0,1,1,0,legitimate
+whatsapp_scam,"Halo ibu menang undian telkomsel kirimkan kode OTP anda sekarang",0,1,0,0,1,1,0,1,1,0,2,scam
+whatsapp_scam,"Ini pesan otomatis dari sistem kami tidak perlu dibalas terima kasih",0,0,0,0,0,0,0,0,0,0,0,legitimate
+whatsapp_scam,"Ayah saya kecelakaan tolong transfer biaya rumah sakit ke rekening ini",0,1,0,1,0,1,1,0,0,0,3,scam
+investment_scam,"Investasi forex modal 1 juta profit pasti 20 persen per minggu daftar sekarang",0,1,1,1,0,1,0,1,1,0,5,scam
+investment_scam,"Pelajari investasi saham di idx co id dengan simulasi trading gratis tanpa deposit",1,0,0,0,0,0,0,0,1,1,0,legitimate
+investment_scam,"Gabung member VIP trading robot otomatis deposit 5 juta hasilkan 50 juta dalam sebulan",0,1,0,1,0,1,0,1,0,0,6,scam
+marketplace_scam,"Jual iphone 15 pro max cuma 2 juta pembayaran hanya via transfer BCA pribadi",0,0,0,1,0,1,0,1,0,0,4,scam
+marketplace_scam,"Jual kemeja bekas kondisi bagus COD hanya di aplikasi shopee toko resmi saya",0,0,0,0,0,0,0,0,0,0,0,legitimate
+marketplace_scam,"Harga murah banget beli 2 gratis 1 transfer langsung jangan lewat aplikasi",0,0,0,1,0,1,0,1,0,0,3,suspicious
+payment_scam,"Segera bayar tagihan listrik anda sebelum jam malam ini melalui rekening berikut atau dicabut",0,1,0,1,0,1,1,0,1,0,3,suspicious
+payment_scam,"Pembayaran tagihan PDAM bulan ini dapat dilakukan melalui ATM atau aplikasi my pertamina",0,0,0,0,0,0,0,0,1,0,0,legitimate
+impersonation,"Kami dari kepolisian memerintahkan anda transfer dana pengamanan ke rekening ini",0,1,0,1,0,1,1,0,1,0,4,scam
+impersonation,"Halo ini dari call center shopee ada kerentanan di akun anda minta kode OTP",0,1,0,0,1,0,1,0,1,0,3,scam
+suspicious_email,"Your amazon account has been compromised click here to verify immediately",1,0,1,0,0,1,0,0,1,0,2,suspicious
+suspicious_email,"Your monthly bank statement is ready to view securely in your banking app",0,0,1,0,0,0,0,0,1,1,0,legitimate
+other,"Mau tanya pak apakah ini benar tolong cek ya terima kasih",0,0,0,0,0,0,0,0,0,0,0,legitimate
