@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setupExportFeatures(); 
     setupQuickTemplates();
     setupHistorySearchAndFilter();
+    setupAuthButtons();
 });
 
 /* SYSTEM TOAST NOTIFICATION */
@@ -30,6 +31,15 @@ function showToast(message, type = "info") {
     setTimeout(() => {
         toast.remove();
     }, 3000);
+}
+
+/* SETUP AUTH BUTTONS */
+function setupAuthButtons() {
+    const btnGoogleLogin = document.getElementById('btnGoogleLogin');
+    const btnLogout = document.getElementById('btnLogout');
+
+    btnGoogleLogin?.addEventListener('click', googleLogin);
+    btnLogout?.addEventListener('click', logout);
 }
 
 /* 1. QUICK TEMPLATE BUTTONS */
@@ -213,16 +223,23 @@ function setupSidebarToggle() {
     });
 }
 
-/* 6. AUTH CHECK */
+/* 6. AUTH CHECK & LOGIN */
 async function checkAuthStatus() {
     try {
-        const res = await fetch(`${API_BASE_URL}/api/auth/status`);
+        const res = await fetch(`${API_BASE_URL}/api/auth/status`, {
+            credentials: 'include'
+        });
         const data = await res.json();
 
+        const loggedOutView = document.getElementById('loggedOutView');
+        const loggedInView = document.getElementById('loggedInView');
+
         if (data.is_logged_in) {
-            document.getElementById('loggedOutView').style.display = 'none';
-            document.getElementById('loggedInView').style.display = 'flex';
-            document.getElementById('userName').innerText = data.name;
+            if (loggedOutView) loggedOutView.style.display = 'none';
+            if (loggedInView) loggedInView.style.display = 'flex';
+            
+            const userNameEl = document.getElementById('userName');
+            if (userNameEl) userNameEl.innerText = data.name;
 
             const emailEl = document.getElementById('userEmail');
             if (emailEl && data.email) emailEl.innerText = data.email;
@@ -237,14 +254,27 @@ async function checkAuthStatus() {
             }
             return data;
         } else {
-            document.getElementById('loggedOutView').style.display = 'block';
-            document.getElementById('loggedInView').style.display = 'none';
+            if (loggedOutView) loggedOutView.style.display = 'block';
+            if (loggedInView) loggedInView.style.display = 'none';
             return { is_logged_in: false };
         }
     } catch (err) {
         console.error("Gagal memeriksa status login:", err);
         return { is_logged_in: false };
     }
+}
+
+async function googleLogin() {
+    const status = await checkAuthStatus();
+    if (status.is_logged_in) {
+        showToast(`Anda terautentikasi sebagai ${status.name}`, "info");
+        return;
+    }
+    window.location.href = `${API_BASE_URL}/auth/login`;
+}
+
+function logout() {
+    window.location.href = `${API_BASE_URL}/auth/logout`;
 }
 
 /* 7. INVESTIGATION & NEW CHAT */
@@ -267,7 +297,7 @@ async function runInvestigation() {
     const btn = document.getElementById('btnInvestigate');
     const loading = document.getElementById('loading');
     const results = document.getElementById('results');
-    const caseType = document.getElementById('caseType')?.value;
+    const caseType = document.getElementById('caseType')?.value || 'general';
     const textInput = document.getElementById('textInput')?.value;
 
     if (!textInput && imagesBase64.length === 0) {
@@ -277,15 +307,19 @@ async function runInvestigation() {
 
     startTime = performance.now();
 
-    btn.disabled = true;
-    btn.innerText = "PROCESSING...";
+    if (btn) {
+        btn.disabled = true;
+        btn.innerText = "PROCESSING...";
+    }
     if (loading) loading.style.display = "flex";
     if (results) results.style.display = "none";
 
+    // Kirim image_base64 (1 gambar) dan images_base64 (array gambar) agar kompatibel
     const payload = {
         case_type: caseType,
         raw_text: textInput || null,
-        images_base64: imagesBase64.length > 0 ? imagesBase64 : null // Mengirim array gambar
+        image_base64: imagesBase64.length > 0 ? imagesBase64[0] : null,
+        images_base64: imagesBase64.length > 0 ? imagesBase64 : null
     };
 
     try {
@@ -298,7 +332,7 @@ async function runInvestigation() {
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
         const data = await response.json();
-        const report = data.investigation_report;
+        const report = data.investigation_report || data;
 
         const endTime = performance.now();
         const duration = ((endTime - startTime) / 1000).toFixed(2);
@@ -310,50 +344,65 @@ async function runInvestigation() {
         showToast("Gagal terhubung ke TRACE AI Engine.", "error");
         console.error("Error Detail:", error);
     } finally {
-        btn.disabled = false;
-        btn.innerText = "RUN INVESTIGATION";
+        if (btn) {
+            btn.disabled = false;
+            btn.innerText = "RUN INVESTIGATION";
+        }
         if (loading) loading.style.display = "none";
     }
 }
 
 function renderReport(report, duration = null) {
+    if (!report) return;
+
     if (duration !== null) {
         const timeEl = document.getElementById('processTime');
         if (timeEl) timeEl.innerText = `${duration}s`;
     }
 
-    document.getElementById('riskPercent').innerText = report.risk_score + "%";
+    const riskPercentEl = document.getElementById('riskPercent');
+    if (riskPercentEl) riskPercentEl.innerText = (report.risk_score || 0) + "%";
 
     const rlEl = document.getElementById('riskLevel');
-    rlEl.innerText = report.risk_level;
-    rlEl.className = "score-value text-" + report.risk_level.toLowerCase();
+    if (rlEl) {
+        const riskLevel = report.risk_level || 'LOW';
+        rlEl.innerText = riskLevel;
+        rlEl.className = "score-value text-" + riskLevel.toLowerCase();
+    }
 
-    document.getElementById('summaryText').innerText = report.evidence_summary;
-    document.getElementById('reasoning-text').innerText = report.reasoning;
+    const summaryEl = document.getElementById('summaryText');
+    if (summaryEl) summaryEl.innerText = report.evidence_summary || 'Tidak ada ringkasan.';
+
+    const reasoningEl = document.getElementById('reasoning-text');
+    if (reasoningEl) reasoningEl.innerText = report.reasoning || 'Tidak ada penjelasan tambahan.';
 
     const flagContainer = document.getElementById('redFlagsContainer');
-    flagContainer.innerHTML = "";
-    if (!report.red_flags || report.red_flags.length === 0) {
-        flagContainer.innerHTML = "<p style='color:var(--text-muted); font-size:13px;'>Tidak ada red flags terdeteksi.</p>";
-    } else {
-        report.red_flags.forEach(flag => {
-            flagContainer.innerHTML += `
-                <div class="flag-card" style="margin-bottom:8px;">
-                    <div style="color:#ef4444; font-size:12px; font-weight:600; margin-bottom:4px;">[ ${flag.severity.toUpperCase()} ] ${flag.type}</div>
-                    <div style="font-size:13px; color:var(--text-main); line-height:1.5;">${flag.description}</div>
-                </div>
-            `;
-        });
+    if (flagContainer) {
+        flagContainer.innerHTML = "";
+        if (!report.red_flags || report.red_flags.length === 0) {
+            flagContainer.innerHTML = "<p style='color:var(--text-muted); font-size:13px;'>Tidak ada red flags terdeteksi.</p>";
+        } else {
+            report.red_flags.forEach(flag => {
+                flagContainer.innerHTML += `
+                    <div class="flag-card" style="margin-bottom:8px;">
+                        <div style="color:#ef4444; font-size:12px; font-weight:600; margin-bottom:4px;">[ ${(flag.severity || 'INFO').toUpperCase()} ] ${flag.type || 'FLAG'}</div>
+                        <div style="font-size:13px; color:var(--text-main); line-height:1.5;">${flag.description || flag}</div>
+                    </div>
+                `;
+            });
+        }
     }
 
     const recList = document.getElementById('recList');
-    recList.innerHTML = "";
-    if (report.recommendation) {
-        report.recommendation.forEach(rec => {
-            const li = document.createElement('li');
-            li.textContent = rec;
-            recList.appendChild(li);
-        });
+    if (recList) {
+        recList.innerHTML = "";
+        if (report.recommendation && Array.isArray(report.recommendation)) {
+            report.recommendation.forEach(rec => {
+                const li = document.createElement('li');
+                li.textContent = rec;
+                recList.appendChild(li);
+            });
+        }
     }
 
     // Auto-Scroll Mulus
@@ -480,13 +529,4 @@ function setupHistorySearchAndFilter() {
 
     searchInput?.addEventListener('input', applyFilter);
     filterSelect?.addEventListener('change', applyFilter);
-}
-
-async function googleLogin() {
-    const status = await checkAuthStatus();
-    if (status.is_logged_in) {
-        showToast(`Anda terautentikasi sebagai ${status.name}`, "info");
-        return;
-    }
-    window.location.href = `${API_BASE_URL}/auth/login`;
 }

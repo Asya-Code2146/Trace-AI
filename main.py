@@ -15,11 +15,13 @@ load_dotenv()
 
 app = FastAPI(title="TRACE AI API")
 
+# Konfigurasi Session Middleware
 app.add_middleware(
     SessionMiddleware, 
     secret_key=os.getenv("SECRET_KEY", "super-secret-key-trace-ai")
 )
 
+# Konfigurasi CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -29,15 +31,15 @@ app.add_middleware(
 )
 
 REDIRECT_URI = "http://127.0.0.1:8000/auth/callback"
+GITHUB_PAGES_URL = "https://asya-code2146.github.io/Trace-AI/"
 
 
 @app.get("/auth/login")
 async def google_login(request: Request):
     if request.session.get("user_id"):
-        return RedirectResponse("/")
+        return RedirectResponse(GITHUB_PAGES_URL)
 
     client_id = os.getenv('GOOGLE_CLIENT_ID')
-    # Ditambahkan prompt=select_account agar Google selalu menampilkan pemilih akun
     url = (
         f"https://accounts.google.com/o/oauth2/v2/auth?"
         f"client_id={client_id}&"
@@ -83,13 +85,15 @@ async def google_callback(request: Request):
     request.session["user_pic"] = user_data.get("picture", "not_available")
     request.session["access_token"] = token_data.get("access_token")
 
-    return RedirectResponse("/")
+    # Redirect kembali ke GitHub Pages setelah login sukses
+    return RedirectResponse(GITHUB_PAGES_URL)
 
 
 @app.get("/auth/logout")
 async def logout(request: Request):
     request.session.clear()
-    return RedirectResponse("/")
+    # Redirect kembali ke GitHub Pages setelah logout
+    return RedirectResponse(GITHUB_PAGES_URL)
 
 
 @app.get("/api/auth/status")
@@ -126,9 +130,15 @@ def health():
     return {"status": "OK", "model": "TRACE AI (Hybrid ML+LLM)"}
 
 
-app.mount("/static", StaticFiles(directory="frontend"), name="static")
+# Mount static folder mengarah ke root project saat ini
+app.mount("/static", StaticFiles(directory="."), name="static")
 
 
 @app.get("/")
 def read_root():
-    return FileResponse("frontend/index.html")
+    return FileResponse("index.html")
+
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
