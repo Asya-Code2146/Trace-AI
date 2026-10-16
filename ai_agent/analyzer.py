@@ -1,5 +1,3 @@
-# ai_agent/analyzer.py
-
 import logging
 import time
 from google import genai
@@ -51,7 +49,6 @@ class LLMAnalyzer:
 
                 report = validate_and_parse(raw_text)
                 
-                # Risk level validation sudah dipindah ke risk_assessor.py
                 logger.info(f"Analysis complete: risk={report.risk_score}, confidence={report.confidence_score}")
                 return report 
 
