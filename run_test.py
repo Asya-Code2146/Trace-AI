@@ -4,7 +4,7 @@ import logging
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s | %(levelname)s | %(message)s")
 
-# WAJIB pilih case_type sekarang!
+
 from ai_agent import investigate
 
 text_phishing = """
@@ -15,7 +15,7 @@ http://bca-keamanan-verifikasi-update.com/aktifkan
 
 print("Menjalankan HYBRID INVESTIGATION (ML + LLM)...")
 result = investigate(
-    case_type="phishing",       # <- USER MEMILIH KATEGORI
+    case_type="phishing",      
     raw_text=text_phishing
 )
 
