@@ -1,5 +1,3 @@
-# ini file JSON Parser & Validator. LLM kadang ngeluarin JSON yang tidak bersih. Ini dia penanganannya😁.
-
 import json
 import re
 import logging
@@ -19,23 +17,20 @@ def extract_json_from_llm_response(raw: str) -> dict:
     """
     text = raw.strip()
 
-    # Hapus markdown code block jika ada ya
     pattern = r"```(?:json)?\s*(.*?)\s*```"
     match = re.search(pattern, text, re.DOTALL)
     if match:
         text = match.group(1).strip()
 
-    # Hapus character yang bisa bikin si JSON rusak
     text = text.replace("\x00", "")
 
-    # Hapus trailing comma sebelum } atau ]
     text = re.sub(r",\s*([}\]])", r"\1", text)
 
     try:
-        # Coba parse normal dulu
+
         return json.loads(text)
     except json.JSONDecodeError:
-        # Kalau gagal (misal: "Extra data"), ambil HANYA JSON pertama yang valid
+ 
         logger.warning("JSON terpotong/berlebih, mencoba mengambil objek pertama...")
         decoder = json.JSONDecoder()
         return decoder.raw_decode(text)[0]
@@ -60,7 +55,6 @@ def validate_and_parse(raw_response: str) -> InvestigationReport:
         logger.error(f"Parsed data: {json.dumps(data, ensure_ascii=False, indent=2)[:500]}")
         raise ValueError(f"Struktur output tidak sesuai schema: {e}")
 
-    # Cross-validasi: risk_level harus konsisten dengan risk_score
     score = report.risk_score
     expected_level = (
         RiskLevel.HIGH if score >= 70 else
