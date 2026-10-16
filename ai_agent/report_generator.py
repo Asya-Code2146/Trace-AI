@@ -1,5 +1,3 @@
-# ai_agent/report_generator.py
-
 import json
 import logging
 from datetime import datetime, timezone
@@ -14,8 +12,8 @@ def generate_final_output(report: InvestigationReport) -> dict:
             "risk_score": report.risk_score,
             "risk_level": report.risk_level.value,
             "confidence_score": report.confidence_score,
-            "ml_prediction": report.ml_prediction,           # <- BARU
-            "ml_probability": report.ml_probability,         # <- BARU
+            "ml_prediction": report.ml_prediction,         
+            "ml_probability": report.ml_probability,        
             "evidence_summary": report.evidence_summary,
             "entities_summary": report.entities_summary,
             "red_flags": [
