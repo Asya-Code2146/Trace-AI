@@ -1,5 +1,3 @@
-# ai_agent/red_flag_detector.py
-
 import re
 import logging
 
