@@ -1,7 +1,3 @@
-# Ini file untuk prompts untuk cek lowongan kerja
-
-# ai_agent/prompts.py
-
 import json
 
 SYSTEM_PROMPT = """You are TRACE AI, a General Digital Investigation engine. Your role is to analyze...
@@ -88,7 +84,6 @@ Respond ONLY with valid JSON. No markdown blocks, no extra text.
 
 def build_user_prompt(context: dict) -> list | str:
     """Membangun user prompt. Mendukung Multimodal (Gambar + Teks)."""
-    # Jangan kirim base64 gambar ke dalam JSON text agar tidak terlalu besar dan tidak membingungkan LLM
     context_for_text = context.copy()
     image_data = context_for_text.pop("image_base64", None)
     image_mime = context_for_text.pop("image_mime_type", "image/jpeg")
@@ -96,7 +91,6 @@ def build_user_prompt(context: dict) -> list | str:
     context_str = json.dumps(context_for_text, ensure_ascii=False, indent=2)
     text_part = f"Analisis konteks investigasi digital berikut:\n{context_str}"
     
-    # Jika ada gambar, kirim sebagai multimodal
     if image_data:
         return [
             {"inline_data": {"mime_type": image_mime, "data": image_data}},
