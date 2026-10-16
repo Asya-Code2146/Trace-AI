@@ -1,5 +1,3 @@
-# ml/evaluate.py
-
 import numpy as np
 import matplotlib
 matplotlib.use('Agg')
@@ -23,7 +21,6 @@ def evaluate_saved_model(csv_test_path: str = "data/raw/dummy_dataset.csv"):
     tfidf = joblib.load('ml/saved_models/tfidf_vectorizer.pkl')
     le = joblib.load('ml/saved_models/label_encoder.pkl')
 
-    # Load data (dalam kasus nyata, ini adalah data uji terpisah)
     df = pd.read_csv(csv_test_path)
     df['clean_text'] = df['text'].apply(clean_text)
 
@@ -34,7 +31,7 @@ def evaluate_saved_model(csv_test_path: str = "data/raw/dummy_dataset.csv"):
         'suspicious_keyword_count'
     ]
 
-    # Transform fitur
+
     X_tfidf = tfidf.transform(df['clean_text'])
     X_numeric = df[numeric_features].values
     
@@ -43,11 +40,11 @@ def evaluate_saved_model(csv_test_path: str = "data/raw/dummy_dataset.csv"):
     
     y_true = le.transform(df['label'])
 
-    # Prediksi
+
     print("Melakukan prediksi...")
     y_pred = model.predict(X_vec)
 
-    # Evaluasi
+
     print("\n" + "="*40)
     print("EVALUASI MODEL")
     print("="*40)
@@ -55,7 +52,7 @@ def evaluate_saved_model(csv_test_path: str = "data/raw/dummy_dataset.csv"):
     print("\nClassification Report:")
     print(classification_report(y_true, y_pred, target_names=list(LABEL_MAP.values())))
 
-    # Confusion Matrix
+
     cm = confusion_matrix(y_true, y_pred)
     plt.figure(figsize=(8, 6))
     sns.heatmap(cm, annot=True, fmt='d', cmap='Greens', 
