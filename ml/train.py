@@ -1,9 +1,7 @@
-# ml/train.py
-
 import os
 import numpy as np
 import matplotlib
-matplotlib.use('Agg') # Agar bisa jalan di server tanpa GUI
+matplotlib.use('Agg') 
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.linear_model import LogisticRegression # type: ignore
@@ -15,21 +13,17 @@ from .preprocess import load_and_preprocess_data
 from .features import build_feature_pipeline, transform_features
 import joblib # type: ignore
 
-# Mapping label yang disimpan
 LABEL_MAP = {0: "legitimate", 1: "suspicious", 2: "scam"}
 
 def train_and_evaluate():
     """Pipeline lengkap: Load -> Fitur -> Train -> Evaluasi -> Save."""
     
-    # 1. Load & Preprocess
     csv_path = 'data/raw/dummy_dataset.csv'
     X_train, X_test, y_train, y_test, le = load_and_preprocess_data(csv_path)
 
-    # 2. Feature Engineering
     X_train_vec = build_feature_pipeline(X_train)
     X_test_vec = transform_features(X_test)
 
-    # 3. Definisikan Models (Baseline)
     models = {
         "Logistic Regression": LogisticRegression(max_iter=1000, random_state=42),
         "Random Forest": RandomForestClassifier(n_estimators=100, random_state=42),
@@ -39,19 +33,15 @@ def train_and_evaluate():
     best_model = None
     best_f1 = 0
     best_name = ""
-
-    # 4. Train & Evaluate
     for name, model in models.items():
         print(f"\n--- Melatih {name} ---")
         model.fit(X_train_vec, y_train)
         y_pred = model.predict(X_test_vec)
         
-        # Metrik
         acc = accuracy_score(y_test, y_pred)
         print(f"Accuracy: {acc:.4f}")
         print(classification_report(y_test, y_pred, target_names=list(LABEL_MAP.values())))
         
-        # Ambil F1-score rata-rata (macro) untuk pembandingan
         report = classification_report(y_test, y_pred, output_dict=True, target_names=list(LABEL_MAP.values()))
         macro_f1 = report['macro avg']['f1-score'] # type: ignore
         
@@ -62,12 +52,9 @@ def train_and_evaluate():
 
     print(f"\n✅ Model terbaik berdasarkan Macro F1-Score: {best_name} (F1: {best_f1:.4f})")
 
-    # 5. Simpan Model Terbaik
     model_path = 'ml/saved_models/best_model.pkl'
     joblib.dump(best_model, model_path)
     print(f"Model disimpan di {model_path}")
-
-    # 6. Buat Confusion Matrix untuk model terbaik
     print("Menyimpan hasil evaluasi...")
     y_pred_best = best_model.predict(X_test_vec) # type: ignore
     cm = confusion_matrix(y_test, y_pred_best)
