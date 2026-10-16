@@ -1,10 +1,7 @@
-# ai_agent/models.py
-
 from pydantic import BaseModel, Field
 from enum import Enum
 from typing import Optional, Any
 
-# ── Enum ──
 class CaseType(str, Enum):
     JOB_SCAM = "job_scam"
     PHISHING = "phishing"
@@ -26,7 +23,6 @@ class Confidence(str, Enum):
     MEDIUM = "medium"
     HIGH = "high"
 
-# ── Models untuk Input & Proses ──
 class GeneralEntities(BaseModel):
     """Entitas umum yang bisa muncul di berbagai kasus."""
     company_name: Optional[str] = None
@@ -42,8 +38,6 @@ class GeneralEntities(BaseModel):
     transaction_amounts: list[str] = Field(default_factory=list)
     social_media_accounts: list[str] = Field(default_factory=list)
     
-    # Field spesifik tambahan (misal: job_title, salary) disimpan di sini
-    # supaya model tetap fleksibel tanpa harus menambah kolom baru
     case_specific_data: dict[str, Any] = Field(default_factory=dict)
 
 class UnifiedContext(BaseModel):
@@ -58,7 +52,6 @@ class UnifiedContext(BaseModel):
     contact_check_results: dict = Field(default_factory=dict)
     company_verification: dict = Field(default_factory=dict)
 
-# ── Models untuk Output ──
 class RedFlagItem(BaseModel):
     type: str
     description: str
@@ -66,16 +59,16 @@ class RedFlagItem(BaseModel):
     evidence_reference: str
 
 class InvestigationReport(BaseModel):
-    ml_prediction: Optional[str] = None          # <- TAMBAHKAN
-    ml_probability: Optional[float] = None       # <- TAMBAHKAN
-    ml_probabilities: dict[str, float] = Field(default_factory=dict) # <- TAMBAHKAN
+    ml_prediction: Optional[str] = None         
+    ml_probability: Optional[float] = None     
+    ml_probabilities: dict[str, float] = Field(default_factory=dict) 
     case_type: str
     risk_score: int = Field(ge=0, le=100)
     risk_level: RiskLevel
     confidence_score: int = Field(ge=0, le=100)
     case_type: str
     evidence_summary: str
-    entities_summary: dict[str, Any] = Field(default_factory=dict) # Ringkasan entitas penting
+    entities_summary: dict[str, Any] = Field(default_factory=dict) 
     red_flags: list[RedFlagItem]
     verified_information: list[str] = Field(default_factory=list)
     unverified_information: list[str] = Field(default_factory=list)
