@@ -1,5 +1,3 @@
-# ini file nya dia buat konfigurasi Gemini API ya 
-
 import os
 from dataclasses import dataclass
 
