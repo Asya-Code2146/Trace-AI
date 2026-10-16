@@ -1,5 +1,3 @@
-# File ini adalah stub (dummy). Nanti pas backendnya tuh ngehubungin ke API pengecekan sungguhan.
-
 import logging
 
 logger = logging.getLogger(__name__)
@@ -14,7 +12,6 @@ class ExternalVerifier:
         """Cek apakah URL aman atau terdaftar mencurigakan."""
         results = {}
         for url in urls:
-            # CONTOH: nanti diganti dengan request ke API VirusTotal/dll
             results[url] = {
                 "status": "not_available",
                 "message": "Verifikasi URL belum terhubung ke layanan eksternal."
