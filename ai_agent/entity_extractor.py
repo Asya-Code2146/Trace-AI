@@ -1,5 +1,3 @@
-# ai_agent/entity_extractor.py
-
 import json
 import logging
 from google import genai
