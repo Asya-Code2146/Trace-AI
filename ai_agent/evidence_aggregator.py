@@ -1,5 +1,3 @@
-# ai_agent/evidence_aggregator.py
-
 import logging
 from .models import UnifiedContext, GeneralEntities
 
@@ -34,7 +32,7 @@ def build_unified_context(
         url_check_results=url_checks,
         contact_check_results=contact_checks,
         company_verification=company_checks,
-        ml_result=ml_result  # <- TAMBAHKAN INI # type: ignore
+        ml_result=ml_result   # type: ignore
     )
     
     return context.model_dump(exclude_none=True)
