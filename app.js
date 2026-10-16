@@ -1,7 +1,7 @@
 const API_BASE_URL = "http://127.0.0.1:8000";
 const apiUrl = `${API_BASE_URL}/api/investigate`;
 
-let imagesBase64 = []; // Menampung array banyak gambar dalam format base64
+let imagesBase64 = []; 
 let historyData = JSON.parse(localStorage.getItem('trace_history') || "[]");
 let startTime = 0;
 
@@ -17,7 +17,6 @@ document.addEventListener("DOMContentLoaded", () => {
     setupAuthButtons();
 });
 
-/* SYSTEM TOAST NOTIFICATION */
 function showToast(message, type = "info") {
     const container = document.getElementById('toastContainer');
     if (!container) return;
@@ -33,7 +32,6 @@ function showToast(message, type = "info") {
     }, 3000);
 }
 
-/* SETUP AUTH BUTTONS */
 function setupAuthButtons() {
     const btnGoogleLogin = document.getElementById('btnGoogleLogin');
     const btnLogout = document.getElementById('btnLogout');
@@ -42,7 +40,6 @@ function setupAuthButtons() {
     btnLogout?.addEventListener('click', logout);
 }
 
-/* 1. QUICK TEMPLATE BUTTONS */
 function setupQuickTemplates() {
     const chipButtons = document.querySelectorAll('.chip-btn');
     chipButtons.forEach(button => {
@@ -60,7 +57,6 @@ function setupQuickTemplates() {
     });
 }
 
-/* 2. EXPORT & COPY REPORT LOGIC */
 function setupExportFeatures() {
     const btnCopy = document.getElementById('btnCopyReport');
     const btnPDF = document.getElementById('btnDownloadPDF');
@@ -111,7 +107,6 @@ function setupExportFeatures() {
     });
 }
 
-/* 3. THEME TOGGLE */
 function setupThemeToggle() {
     const btnTheme = document.getElementById('btnThemeToggle');
     const sunIcon = document.getElementById('themeIconSun');
@@ -139,7 +134,6 @@ function setupThemeToggle() {
     }
 }
 
-/* 4. MULTI-IMAGE PREVIEW LOGIC */
 function setupImagePreview() {
     const input = document.getElementById('imageInput');
     const container = document.getElementById('imagePreviewContainer');
@@ -153,7 +147,6 @@ function setupImagePreview() {
                 const base64Data = event.target.result.split(',')[1];
                 imagesBase64.push(base64Data);
 
-                // Buat thumbnail preview per gambar
                 const thumbBox = document.createElement('div');
                 thumbBox.className = 'preview-thumb-box';
 
@@ -184,7 +177,7 @@ function setupImagePreview() {
         if (files.length > 0 && container) {
             container.style.display = 'flex';
         }
-        input.value = ""; // Reset value agar bisa menambah file baru lagi
+        input.value = ""; 
     });
 }
 
@@ -200,7 +193,6 @@ function resetImageInput() {
     imagesBase64 = [];
 }
 
-/* 5. SIDEBAR LOGIC */
 function setupSidebarToggle() {
     const layout = document.getElementById('appLayout');
     const btnToggle = document.getElementById('btnToggleSidebar');
@@ -223,7 +215,6 @@ function setupSidebarToggle() {
     });
 }
 
-/* 6. AUTH CHECK & LOGIN */
 async function checkAuthStatus() {
     try {
         const res = await fetch(`${API_BASE_URL}/api/auth/status`, {
@@ -277,7 +268,6 @@ function logout() {
     window.location.href = `${API_BASE_URL}/auth/logout`;
 }
 
-/* 7. INVESTIGATION & NEW CHAT */
 document.getElementById('btnNewChat')?.addEventListener('click', () => {
     const textInput = document.getElementById('textInput');
     const results = document.getElementById('results');
@@ -314,7 +304,6 @@ async function runInvestigation() {
     if (loading) loading.style.display = "flex";
     if (results) results.style.display = "none";
 
-    // Kirim image_base64 (1 gambar) dan images_base64 (array gambar) agar kompatibel
     const payload = {
         case_type: caseType,
         raw_text: textInput || null,
@@ -405,7 +394,6 @@ function renderReport(report, duration = null) {
         }
     }
 
-    // Auto-Scroll Mulus
     const resultsEl = document.getElementById('results');
     if (resultsEl) {
         resultsEl.style.display = "block";
@@ -413,7 +401,6 @@ function renderReport(report, duration = null) {
     }
 }
 
-/* 8. HISTORY MANAGEMENT WITH FILTER & SEARCH */
 function formatTitle(text) {
     if (!text) return "";
     return text.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
