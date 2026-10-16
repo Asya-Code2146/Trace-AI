@@ -15,13 +15,12 @@ load_dotenv()
 
 app = FastAPI(title="TRACE AI API")
 
-# Konfigurasi Session Middleware
+
 app.add_middleware(
     SessionMiddleware, 
     secret_key=os.getenv("SECRET_KEY", "super-secret-key-trace-ai")
 )
 
-# Konfigurasi CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -85,14 +84,12 @@ async def google_callback(request: Request):
     request.session["user_pic"] = user_data.get("picture", "not_available")
     request.session["access_token"] = token_data.get("access_token")
 
-    # Redirect kembali ke GitHub Pages setelah login sukses
     return RedirectResponse(GITHUB_PAGES_URL)
 
 
 @app.get("/auth/logout")
 async def logout(request: Request):
     request.session.clear()
-    # Redirect kembali ke GitHub Pages setelah logout
     return RedirectResponse(GITHUB_PAGES_URL)
 
 
@@ -129,8 +126,6 @@ def investigate_endpoint(req: InvestigateRequest):
 def health():
     return {"status": "OK", "model": "TRACE AI (Hybrid ML+LLM)"}
 
-
-# Mount static folder mengarah ke root project saat ini
 app.mount("/static", StaticFiles(directory="."), name="static")
 
 
