@@ -5,7 +5,6 @@ from datetime import datetime, timezone
 from sqlalchemy.ext.serializer import Serializer, Deserializer
 import json
 
-# Setup Database Lokal (SQLite)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(BASE_DIR, "trace_ai.db")
 
@@ -13,7 +12,7 @@ engine = create_engine(f"sqlite:///{DB_PATH}", connect_args={"check_same_thread"
 Base = declarative_base()
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-# --- MODELS ---
+
 
 class User(Base):
     __tablename__ = "users"
@@ -30,10 +29,9 @@ class InvestigationHistory(Base):
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     case_type = Column(String(50), nullable=False)
     raw_text = Column(Text, nullable=True)
-    result_json = Column(Text, nullable=False)  # Disimpan sebagai string JSON
+    result_json = Column(Text, nullable=False)  
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
-# Inisialisasi Database (Buat tabel otomatis jika belum ada)
 def init_db():
     Base.metadata.create_all(bind=engine)
 
